@@ -1,0 +1,92 @@
+CREATE DATABASE sistema_clinica;
+USE sistema_clinica;
+
+
+CREATE TABLE clientes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) NOT NULL UNIQUE,
+    email VARCHAR(100) NOT NULL,
+    empresa VARCHAR(100),
+    cargo VARCHAR(50),
+    idade INT,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+
+CREATE TABLE exames (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    tipo VARCHAR(50),
+    categoria VARCHAR(50),
+    preparacao TEXT,
+    duracao VARCHAR(50),
+    observacoes TEXT,
+    data_cadastro DATETIME DEFAULT CURRENT_TIMESTAMP,
+    descricao varchar(500)
+);
+
+
+
+CREATE TABLE cliente_exames (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    exame_id INT NOT NULL,
+    data_associacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
+    FOREIGN KEY (exame_id) REFERENCES exames(id) ON DELETE CASCADE
+);
+
+CREATE TABLE documentos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    nome_arquivo VARCHAR(255) NOT NULL,
+    caminho_arquivo VARCHAR(255) NOT NULL,
+    data_upload TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE empresas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    cnpj VARCHAR(20) NOT NULL,
+    endereco VARCHAR(255)
+
+);
+
+
+CREATE TABLE admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    senha VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE cliente_contas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cliente_id INT NOT NULL,
+    login VARCHAR(100) NOT NULL,
+    senha VARCHAR(255) NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE
+);
+
+
+
+
+
+ALTER TABLE usuarios ADD COLUMN usuario VARCHAR(50) NOT NULL UNIQUE;
+ALTER TABLE cliente_contas ADD COLUMN email VARCHAR(100);
+ALTER TABLE empresas ADD COLUMN nome_fantasia VARCHAR(255) AFTER cnpj;
+ALTER TABLE clientes ADD COLUMN data_nascimento DATE;
